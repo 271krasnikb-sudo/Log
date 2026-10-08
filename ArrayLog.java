@@ -12,7 +12,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // Instance variables
     private T[] log;
     private String name;
-    private int size;
+    private int size = 0;
     
     // Create a new String array with a capacity of 4 elements
     // and assign values to instance variables.
@@ -26,30 +26,41 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // Returns the name of this StringLog.
     public String getName()
     {
-        return "";
+        return name;
     }
 
     // Returns the logical size of this StringLog.
     public int size()
     {
-        return -1;
+        return size;
     }
     
     // Returns true if this list contains no elements.
     public boolean isEmpty()
     {
-        return false;
+        return size == 0;
     }
     
     // Returns true if this list is completely full.
     public boolean isFull()
     {
-        return false;
+        return size == log.length;
     }
 
     // Appends the specified element to the end of this list.
     public void add(T element)
     {
+        if(isFull()){
+            T[] newLog = (T[])new Object[log.length * 2];
+            for(int i = 0; i < size; i++){
+                newLog[i] = log[i];
+            }
+            log = newLog;
+        }
+        log[size] = element;
+        size++;
+
+
     }
   
     // Returns the element at the specified position in this list.
