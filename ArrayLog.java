@@ -21,6 +21,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
         // cannot create a generic array object, so has to be cast
         // from an Object back into the generic in order to compile
         this.log = (T[])new Object[4];
+        this.name = name;
     }
 
     // Returns the name of this StringLog.
@@ -104,15 +105,15 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // Inserts the specified element at the specified position in this list.
     public void add(int index, T element)
     {
-        checkSize();
-        for(int i = size-1; i >= index; i--){
-
-            log[i+1] = log[i];
-
+        if(index < 0 || index > size){
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        log[size] = element;
+        checkSize();
+        for (int i = size; i > index; i--){
+            log[i] = log[i - 1];
+        }
+        log[index] = element;
         size++;
-
 
     }
     
@@ -126,6 +127,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
             log[i] = log[i+1];
         }
         size--;
+        checkSize();
         return oldElement;
     }
     
@@ -141,6 +143,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
             }
         }
 
+        checkSize();
         return false;
     }
     
@@ -151,6 +154,8 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
             log[i] = null;
         }
         size = 0;
+        checkSize();
+        log = (T[])new Object[4]; 
     }
 
     public void checkSize(){
@@ -161,9 +166,8 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
             }
             log = newLog;
         }
-
-        if(size==log.length/4){
-             T[] newLog = (T[])new Object[log.length/ 2];
+        if(size==log.length/4.0){
+            T[] newLog = (T[])new Object[log.length/ 2];
             for(int i = 0; i < size; i++){
                 newLog[i] = log[i];
             }
