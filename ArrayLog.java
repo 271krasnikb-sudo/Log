@@ -122,9 +122,12 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // are set to null.
     public T remove(int index)
     {
-         T oldElement = log[index];
-        for(int i = index; i< size; i ++){
-            log[i] = log[i+1];
+        if(index < 0 || index >= size){
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+        T oldElement = log[index];
+        for(int i = index; i < size - 1; i++){
+            log[i] = log[i + 1];
         }
         size--;
         checkSize();
