@@ -14,53 +14,88 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
 
     public LinkedLog(String name)
     {
+        this.name = name;
+        this.log = null;
+        this.size = 0;
     }
     
     // returns the name of this StringLog
     public String getName()
     {
-        return "";
+        return name;
     }
 
     // returns the logical size of this StringLog
     public int size()
     {
-        return -1;
+        return size;
     }
     
     // returns true if this list contains no elements
     public boolean isEmpty()
     {
-        return false;
+        return size == 0;
     }
     
     // returns true if this list is completely full
     public boolean isFull()
     {
-        return true;
+        return false;
     }
 
     // appends the specified element to the end of this list
     public void add(T element)
     {
+        if(log == null){
+            log = new LLNode<>(element);
+        }else{
+        LLNode temp = log;
+        while (temp.getLink() != null) {
+            temp = temp.getLink();
+        }
+        temp.setLink(new LLNode<>(element));
+    }
+        size++;
     }
   
     // returns the element at the specified position in this list
     public T get(int index)
     {
-        return null;
+        if(index < 0 || index >= size){
+            throw new IndexOutOfBoundsException("Index: " + index + " is out of bounds");
+        }
+
+        LLNode<T> temp = log;
+        for(int i = 0; i<index; i++){
+            temp = temp.getLink();
+        }
+        return temp.getInfo();
     }
     
     // returns the index of the first occurance of the specified element
     // in this list, or -1 if this list does not contain the element
     public int indexOf(T element)
     {
+         LLNode<T> temp = log;
+        for(int i = 0; i< size; i++){
+            if(temp.getInfo().equals(element)){
+                return i;
+            }
+            temp = temp.getLink();
+        }
         return -1;
     }
     
     // returns true if this list contains the specified element
     public boolean contains(T element)
     {
+        LLNode<T> temp = log;
+        for(int i = 0; i< size; i++){
+            if(temp.getInfo().equals(element)){
+                return true;
+            }
+            temp = temp.getLink();
+        }
         return false;
     }
     
@@ -84,7 +119,18 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     // with the specified element
     public T set(int index, T element)
     {
-        return null;
+      if(index < 0 || index >= size){
+            throw new IndexOutOfBoundsException("Index: " + index + " is out of bounds");
+        }
+
+         LLNode<T> temp = log;
+         T tempElement = null;
+        for(int i = 0; i<index+1; i++){
+            tempElement = temp.getInfo();
+            temp.setInfo(element);
+        }
+        return tempElement;
+        
     }
     
     // inserts the specified element at the specified position in this list
