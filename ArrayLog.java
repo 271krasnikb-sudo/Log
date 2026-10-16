@@ -129,6 +129,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
         for(int i = index; i < size - 1; i++){
             log[i] = log[i + 1];
         }
+        log[size-1] = null;
         size--;
         checkSize();
         return oldElement;
