@@ -125,10 +125,12 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
 
          LLNode<T> temp = log;
          T tempElement = null;
-        for(int i = 0; i<index+1; i++){
-            tempElement = temp.getInfo();
-            temp.setInfo(element);
+        for(int i = 0; i<index; i++){
+              temp = temp.getLink();
+              tempElement = temp.getInfo();
         }
+         temp.setInfo(element);
+            temp = temp.getLink();
         return tempElement;
         
     }
@@ -136,23 +138,74 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     // inserts the specified element at the specified position in this list
     public void add(int index, T element)
     {
+        if(index < 0 || index > size){
+            throw new IndexOutOfBoundsException("Index: " + index + " is out of bounds");
+        }
+
+        if (index == 0) {
+            log = new LLNode<>(element);
+        } else {
+            LLNode<T> temp = log;
+            for (int i = 0; i < index - 1; i++) {
+                temp = temp.getLink();
+            }
+            LLNode<T> newNode = new LLNode<>(element);
+            newNode.setLink(temp.getLink());
+            temp.setLink(newNode);
+        }
+        size++;
     }
     
     // removes the element at the specified position in this list
     public T remove(int index)
     {
-        return null;
+         if(index < 0 || index >= size){
+            throw new IndexOutOfBoundsException("Index: " + index + " is out of bounds");
+        }
+
+        LLNode<T> temp = log;
+        if (index == 0) {
+            T removed = temp.getInfo();
+            log = temp.getLink();
+            size--;
+            return removed;
+        }
+        for (int i = 0; i < index - 1; i++) {
+            temp = temp.getLink();
+        }
+        LLNode<T> removing= temp.getLink();
+        T removed = removing.getInfo();
+        temp.setLink(removing.getLink());
+        size--;
+        return removed;
     }
     
     // removes the first occurance of the specified element from this
     // list, if it is present
     public boolean remove(T element)
     {
+        if(log.getInfo().equals(element)){
+            log = log.getLink();
+            size--;
+            return true;
+        }
+         LLNode<T> temp = log;
+        for(int i = 0; i<size-1;i++){
+            if(temp.getLink().getInfo().equals(element)){
+                temp.setLink(temp.getLink().getLink());
+                size--;
+                return true;
+            }
+            temp=temp.getLink();
+
+        }
         return false;
     }
         
     // removes all of the elements from this list
     public void clear()
     {
+        log = null;
+        size = 0;
     }
 }
